@@ -1,0 +1,11 @@
+D:\CMS\backend\CMS.Domain\bin\Debug\net10.0\CMS.Domain.deps.json
+D:\CMS\backend\CMS.Domain\bin\Debug\net10.0\CMS.Domain.dll
+D:\CMS\backend\CMS.Domain\bin\Debug\net10.0\CMS.Domain.pdb
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.AssemblyInfoInputs.cache
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.AssemblyInfo.cs
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.csproj.CoreCompileInputs.cache
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.dll
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\refint\CMS.Domain.dll
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.pdb
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\ref\CMS.Domain.dll

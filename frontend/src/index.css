@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  body {
+    @apply text-gray-900;
+    font-family: 'Inter', sans-serif;
+    background-color: #EEF2F7;
+  }
+}
+
+/* ── Zoho-style scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* ── Zoho sidebar active glow ── */
+.zoho-nav-active {
+  background: linear-gradient(135deg, rgba(11, 95, 255, 0.15) 0%, rgba(11, 95, 255, 0.08) 100%);
+  border-right: 3px solid #0B5FFF;
+  color: #0B5FFF;
+}
+
+/* ── Zoho card hover ── */
+.zoho-card {
+  transition: all 0.2s ease;
+  border: 1px solid #E8EDF4;
+}
+
+.zoho-card:hover {
+  box-shadow: 0 8px 24px rgba(11, 95, 255, 0.10);
+  border-color: #C5D4F5;
+  transform: translateY(-1px);
+}
+
+/* ── Gradient button ── */
+.zoho-btn-primary {
+  background: linear-gradient(135deg, #0B5FFF 0%, #2D7FF9 100%);
+  box-shadow: 0 4px 14px rgba(11, 95, 255, 0.35);
+  transition: all 0.2s ease;
+}
+
+.zoho-btn-primary:hover {
+  background: linear-gradient(135deg, #0950E8 0%, #1A6FFF 100%);
+  box-shadow: 0 6px 20px rgba(11, 95, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+/* ── Sidebar link transition ── */
+.zoho-nav-link {
+  transition: all 0.15s ease;
+  border-right: 3px solid transparent;
+}
+
+.zoho-nav-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* ── Fade-in animation ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.35s ease both;
+}
+
+/* ── Pulse dot ── */
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
