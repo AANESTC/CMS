@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { MdDashboard, MdPeople, MdEvent, MdInsertDriveFile, MdLogout, MdReceipt, MdNotificationsActive, MdLocalHospital, MdLibraryBooks, MdAnalytics, MdSettings, MdMedicalServices, MdManageAccounts } from 'react-icons/md';
+import { MdDashboard, MdPeople, MdEvent, MdInsertDriveFile, MdLogout, MdReceipt, MdNotificationsActive, MdLocalHospital, MdLibraryBooks, MdAnalytics, MdSettings, MdMedicalServices } from 'react-icons/md';
 
 const ReceptionistLayout = () => {
   const location  = useLocation();
@@ -15,7 +15,6 @@ const ReceptionistLayout = () => {
     { name: 'Medical Records', path: '/receptionist/medical-records', icon: MdLibraryBooks },
     { name: 'Invoices',     path: '/receptionist/invoices',     icon: MdReceipt },
     { name: 'Reports',      path: '/receptionist/reports',      icon: MdAnalytics },
-    { name: 'Patient Portal', path: '/receptionist/patient-portal', icon: MdManageAccounts },
     { name: 'Settings',     path: '/receptionist/settings',     icon: MdSettings },
   ];
 
@@ -33,7 +32,7 @@ const ReceptionistLayout = () => {
             <MdLocalHospital size={18} className="text-white" />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '13px', fontWeight: 500, color: '#ffffff', lineHeight: 1.2 }}>CareFlow CMS</span>
+            <span style={{ fontSize: '13px', fontWeight: 500, color: '#ffffff', lineHeight: 1.2 }}>CareFlow PCMS</span>
             <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', marginTop: '2px', lineHeight: 1.2 }}>Receptionist Portal</span>
           </div>
         </div>

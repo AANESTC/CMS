@@ -40,7 +40,7 @@ const Register = () => {
           Create an Account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Join the CareFlow CMS Platform
+          Join the CareFlow PCMS Platform
         </p>
       </div>
 

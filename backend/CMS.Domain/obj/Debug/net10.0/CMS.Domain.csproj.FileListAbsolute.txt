@@ -9,3 +9,4 @@ D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.dll
 D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\refint\CMS.Domain.dll
 D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.pdb
 D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\ref\CMS.Domain.dll
+D:\CMS\backend\CMS.Domain\obj\Debug\net10.0\CMS.Domain.sourcelink.json

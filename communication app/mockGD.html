@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Mock GD</title>
+    <link rel="stylesheet" href="gd.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="mockGD.html">Mock GD</a></li>
+                <li><a href="mockINTERVIEW.html">Mock Interview</a></li>
+                <li><a href="mockSELFINTODUCTION.html">Mock Self Introduction</a></li>
+                <li><a href="results.html">Result</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="about">
+        <h2>About Mock GD</h2>
+        <p>It is a structured conversation involving a group of individuals, usually between 6 to 15 participants, who gather to discuss a specific topic or problem.</p>
+        
+        <h3>Registration Successfull</h3>
+        <table>
+            <tr>
+                <td>Date & Time:</td>
+                <td>10/05/2024 & 8:30AM to 9:30AM</td>
+                <td id="selectedDateTime"></td>
+            </tr>
+            <tr>
+                <td>Faculty:</td>
+                <td>Faculty-2</td>
+                <td id="selectedFaculty"></td>
+            </tr>
+            <tr>
+                <td>Event:</td>
+                <td>Mock GD</td>
+                <td id="selectedEvent"></td>
+
+            </tr>
+            <tr>
+                <td>Venue:</td>
+                <td>CSE-Conference Hall-1</td>
+                <td id="selectedVenue"></td>
+            </tr>
+        </table>
+    </section>
+
+    <script>
+        // Retrieve selected information from localStorage
+        var selectedDateTime = localStorage.getItem("selectedDateTime");
+        var selectedFaculty = localStorage.getItem("selectedFaculty");
+        var selectedVenue = localStorage.getItem("selectedVenue");
+        var selectedEvent = localStorage.getItem("selectedEvent");
+
+        // Set the retrieved information to the corresponding HTML elements
+        document.getElementById("selectedDateTime").textContent = selectedDateTime;
+        document.getElementById("selectedFaculty").textContent = selectedFaculty;
+        document.getElementById("selectedVenue").textContent = selectedVenue;
+        document.getElementById("selectedEvent").textContent = selectedEvent;
+    </script>
+</body>
+</html>

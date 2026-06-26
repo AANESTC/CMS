@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel="stylesheet" href="result.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="mockGD.html">Mock GD</a></li>
+                <li><a href="mockINTERVIEW.html">Mock Interview</a></li>
+                <li><a href="mockSELFINTODUCTION.html">Mock Self Introduction</a></li>
+                <li><a href="results.html">Result</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="about">
+        <h2>Profile</h2>
+        <p>Upload your resume:</p>
+        <form id="resumeForm" enctype="multipart/form-data">
+            <input type="file" id="resumeFile" name="resume" accept=".pdf,.doc,.docx">
+            <button type="submit">Upload</button>
+        </form>
+
+        <p>Remarks by Faculty:</p>
+        <textarea id="remarks" rows="4" cols="50"></textarea>
+        <button id="saveRemarks">Save Remarks</button>
+
+        <h3>Results:</h3>
+        <div id="userResults"></div>
+    </section>
+
+    <script>
+        // Function to handle resume upload
+        document.getElementById("resumeForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch("upload.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log(result); // Display response from server (e.g., success or error message)
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+
+        // Function to save remarks by faculty
+        document.getElementById("saveRemarks").addEventListener("click", function() {
+            var remarks = document.getElementById("remarks").value;
+            // Code to save remarks to database or file
+            console.log("Remarks saved:", remarks);
+        });
+
+        // Fetch user results and display
+        fetch("fetch_results.php")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("userResults").innerHTML = data;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    </script>
+</body>
+</html>

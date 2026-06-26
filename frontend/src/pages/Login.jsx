@@ -76,8 +76,8 @@ const Login = () => {
               <MdLocalHospital className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">CareFlow CMS</h1>
-              <p className="text-xs" style={{ color: '#94A3B8' }}>Clinic Management System</p>
+              <h1 className="text-2xl font-bold text-white">CareFlow PCMS</h1>
+              <p className="text-xs" style={{ color: '#94A3B8' }}>Professional Client Management System</p>
             </div>
           </div>
         </div>
@@ -110,7 +110,7 @@ const Login = () => {
         {/* Footer tag */}
         <div className="relative z-10">
           <p className="text-xs" style={{ color: '#475569' }}>
-            © 2025 CareFlow CMS · All rights reserved
+            © 2025 CareFlow PCMS · All rights reserved
           </p>
         </div>
       </div>
@@ -125,7 +125,7 @@ const Login = () => {
                  style={{ background: '#0B5FFF' }}>
               <MdLocalHospital className="w-7 h-7 text-white" />
             </div>
-            <h1 className="text-2xl font-bold" style={{ color: '#1A2B4A' }}>CareFlow CMS</h1>
+            <h1 className="text-2xl font-bold" style={{ color: '#1A2B4A' }}>CareFlow PCMS</h1>
           </div>
 
           {/* Card */}

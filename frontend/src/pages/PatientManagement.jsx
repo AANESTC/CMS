@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPatients, registerPatient } from '../api';
+import { getPatients, registerPatient, deletePatient } from '../api';
 import {
   MdArrowBack,
   MdFilterList,
@@ -25,7 +25,8 @@ import {
   MdDescription,
   MdAccessTime,
   MdEventAvailable,
-  MdPhone
+  MdPhone,
+  MdDelete
 } from 'react-icons/md';
 
 const getAvatarUrl = (name) => {
@@ -74,12 +75,9 @@ const PatientManagement = () => {
   // Stats visibility state
   const [showStats, setShowStats] = useState(false);
   
-  // Accordion state for collapsible cards
-  const [expandedIds, setExpandedIds] = useState([]);
+
   
-  // Selection and Checkbox States (for table view)
-  const [selectedIds, setSelectedIds] = useState([]);
-  
+  // Selection and Checkbox States (for table view) - Removed
   // Registration Modal State
   const [isRegModalOpen, setIsRegModalOpen] = useState(false);
   const [newPatientName, setNewPatientName] = useState('');
@@ -94,39 +92,18 @@ const PatientManagement = () => {
     fetchPatients();
   }, []);
 
-  const fetchPatients = async () => {
+  async function fetchPatients() {
     try {
       const data = await getPatients();
       setPatients(data);
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const toggleExpand = (id) => {
-    if (expandedIds.includes(id)) {
-      setExpandedIds(expandedIds.filter(item => item !== id));
-    } else {
-      setExpandedIds([...expandedIds, id]);
-    }
-  };
 
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedIds(filteredPatients.map(p => p.patientId));
-    } else {
-      setSelectedIds([]);
-    }
-  };
 
-  const handleSelectOne = (id, checked) => {
-    if (checked) {
-      setSelectedIds([...selectedIds, id]);
-    } else {
-      setSelectedIds(selectedIds.filter(item => item !== id));
-    }
-  };
-
+  // Selected IDs functionality removed
   // Filter & Sort patients
   const filteredPatients = patients.filter((patient) => {
     const matchesSearch =
@@ -149,6 +126,18 @@ const PatientManagement = () => {
 
   const handleViewPatient = (id) => {
     navigate(`/receptionist/patients/${id}`);
+  };
+
+  const handleDeletePatient = async (id, e) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this patient?')) {
+      try {
+        await deletePatient(id);
+        setPatients(patients.filter(p => p.patientId !== id));
+      } catch (err) {
+        alert('Failed to delete patient: ' + err.message);
+      }
+    }
   };
 
   const handleRegisterSubmit = async (e) => {
@@ -187,7 +176,7 @@ const PatientManagement = () => {
     }
   };
 
-  const tableColWidths = { gridTemplateColumns: '40px 80px 2.2fr 0.7fr 1.4fr 1.4fr 2.2fr 1.6fr 1fr 1fr 1fr' };
+  const tableColWidths = { gridTemplateColumns: '80px 2.2fr 0.7fr 1.4fr 1.4fr 2.2fr 1.6fr 1fr 1fr 1fr' };
 
   return (
     <div className="screen-fade h-full overflow-hidden p-4 flex flex-col gap-4 bg-slate-50/50 min-h-0">
@@ -465,6 +454,11 @@ const PatientManagement = () => {
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border"
                           style={{ background: '#E6F7EE', color: '#00AA45', borderColor: '#00AA4533' }}>Active</span>
                     <div className="flex gap-1">
+                      <button onClick={(e) => handleDeletePatient(p.patientId, e)}
+                        className="p-1 rounded-lg text-red-500 hover:bg-red-50 transition-all"
+                        title="Delete Patient">
+                        <MdDelete size={14} />
+                      </button>
                       <button onClick={(e) => { e.stopPropagation(); handleViewPatient(p.patientId); }}
                         className="px-2 py-1 rounded-lg text-[10px] font-semibold transition-all hover:bg-slate-200"
                         style={{ background: '#F0F4F8', color: '#1A2B4A' }}>
@@ -488,9 +482,6 @@ const PatientManagement = () => {
         // Table View
         <div className="flex-1 flex flex-col overflow-hidden bg-white border rounded-2xl min-h-0 shadow-sm">
           <div className="grid text-[10.5px] items-center flex-shrink-0 border-b bg-slate-50 px-4 py-3 font-bold text-slate-500 uppercase tracking-wider" style={tableColWidths}>
-            <input type="checkbox" className="cursor-pointer rounded border-slate-300"
-              checked={selectedIds.length > 0 && selectedIds.length === filteredPatients.length}
-              onChange={handleSelectAll} />
             <span>ID</span>
             <span>Patient</span>
             <span>Age</span>
@@ -505,18 +496,15 @@ const PatientManagement = () => {
           <div className="divide-y divide-slate-100 overflow-y-auto flex-grow scrollbar-hide min-h-0">
             {filteredPatients.length > 0 ? (
               filteredPatients.map((patient) => {
-                const isChecked = selectedIds.includes(patient.patientId);
                 const dtStr = patient.createdDate ? new Date(patient.createdDate).toLocaleDateString() : 'Today';
                 
                 return (
                   <div
                     key={patient.patientId}
-                    className={`grid items-center py-3 px-4 hover:bg-slate-50 cursor-pointer ${isChecked ? 'bg-blue-50/50' : ''}`}
+                    className={`grid items-center py-3 px-4 hover:bg-slate-50 cursor-pointer`}
                     style={tableColWidths}
                     onClick={() => handleViewPatient(patient.patientId)}
                   >
-                    <input type="checkbox" className="cursor-pointer rounded border-slate-300"
-                      checked={isChecked} onClick={(e) => e.stopPropagation()} onChange={(e) => handleSelectOne(patient.patientId, e.target.checked)} />
                     <span className="text-slate-400 text-[10px] font-semibold">{patient.patientId.substring(0,6).toUpperCase()}</span>
                     
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -569,6 +557,9 @@ const PatientManagement = () => {
                     <div className="flex items-center justify-end gap-1.5 pr-2" onClick={(e) => e.stopPropagation()}>
                       <button className="p-1 text-slate-400 hover:text-blue-600 transition-colors" onClick={() => handleViewPatient(patient.patientId)}>
                         <MdVisibility size={16} />
+                      </button>
+                      <button className="p-1 text-slate-400 hover:text-red-600 transition-colors" onClick={(e) => handleDeletePatient(patient.patientId, e)}>
+                        <MdDelete size={16} />
                       </button>
                     </div>
                   </div>

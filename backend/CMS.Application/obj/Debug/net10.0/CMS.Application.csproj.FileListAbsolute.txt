@@ -13,3 +13,4 @@ D:\CMS\backend\CMS.Application\obj\Debug\net10.0\CMS.Application.dll
 D:\CMS\backend\CMS.Application\obj\Debug\net10.0\refint\CMS.Application.dll
 D:\CMS\backend\CMS.Application\obj\Debug\net10.0\CMS.Application.pdb
 D:\CMS\backend\CMS.Application\obj\Debug\net10.0\ref\CMS.Application.dll
+D:\CMS\backend\CMS.Application\obj\Debug\net10.0\CMS.Application.sourcelink.json

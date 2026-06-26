@@ -17,3 +17,4 @@ D:\CMS\backend\CMS.Infrastructure\obj\Debug\net10.0\refint\CMS.Infrastructure.dl
 D:\CMS\backend\CMS.Infrastructure\obj\Debug\net10.0\CMS.Infrastructure.pdb
 D:\CMS\backend\CMS.Infrastructure\obj\Debug\net10.0\CMS.Infrastructure.genruntimeconfig.cache
 D:\CMS\backend\CMS.Infrastructure\obj\Debug\net10.0\ref\CMS.Infrastructure.dll
+D:\CMS\backend\CMS.Infrastructure\obj\Debug\net10.0\CMS.Infrastructure.sourcelink.json

@@ -18,7 +18,6 @@ import FollowUpManagement from './pages/FollowUpManagement';
 import MedicalRecords from './pages/MedicalRecords';
 import ReportsAnalytics from './pages/ReportsAnalytics';
 import Settings from './pages/Settings';
-import PatientPortal from './pages/PatientPortal';
 
 function App() {
   return (
@@ -52,7 +51,6 @@ function App() {
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="invoices" element={<InvoiceManagement />} />
           <Route path="follow-ups" element={<FollowUpManagement />} />
-          <Route path="patient-portal" element={<PatientPortal />} />
           <Route path="reports" element={<ReportsAnalytics />} />
           <Route path="settings" element={<Settings />} />
         </Route>

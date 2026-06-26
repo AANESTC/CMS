@@ -273,10 +273,10 @@ const PatientPortal = () => {
             <div className="bg-[#075e54] px-4 py-3 flex items-center gap-3 shadow-sm z-10">
               <MdArrowForwardIos size={14} className="text-white rotate-180" />
               <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0">
-                <div className="w-full h-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs">CMS</div>
+                <div className="w-full h-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs">PCMS</div>
               </div>
               <div className="flex flex-col flex-1">
-                <span className="text-white font-bold text-sm leading-tight">CMS Clinic</span>
+                <span className="text-white font-bold text-sm leading-tight">PCMS Clinic</span>
                 <span className="text-green-200 text-[10px]">online</span>
               </div>
               <MdPhoneAndroid size={16} className="text-white" />
@@ -297,7 +297,7 @@ const PatientPortal = () => {
                 </ul>
                 <a href="#" className="text-[11px] text-blue-500 underline break-all block mb-3">{portalLink}</a>
                 <p className="text-[11px] text-slate-800 mb-1">Regards,</p>
-                <p className="text-[11px] text-slate-800 font-bold">Clinic Management System</p>
+                <p className="text-[11px] text-slate-800 font-bold">Professional Client Management System</p>
                 <span className="text-[8px] text-slate-400 absolute bottom-1.5 right-2">10:24 AM</span>
               </div>
 

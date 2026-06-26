@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { getPatientDocuments, getPatients, deleteDocument } from '../api';
+import { useState, useEffect, useMemo } from 'react';
+import { getPatientDocuments, getPatients, deleteDocument, uploadDocument } from '../api';
 import {
   MdSearch, MdChevronRight, MdPerson,
   MdFolderShared, MdBloodtype, MdMedicalServices, MdImage, MdScience,
   MdDownload, MdDelete, MdOpenInNew, MdKeyboardArrowDown,
-  MdDateRange, MdRefresh, MdPictureAsPdf, MdKeyboardArrowUp,
-  MdAssignment
+  MdDateRange, MdRefresh, MdKeyboardArrowUp,
+  MdAssignment, MdAdd, MdClose
 } from 'react-icons/md';
 
 // Base URL for document links
@@ -71,6 +71,12 @@ const DocumentManagement = () => {
   const [patientSearch, setPatientSearch] = useState('');
   const [activeTab, setActiveTab] = useState('All');
 
+  // Upload States
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadFile, setUploadFile] = useState(null);
+  const [uploadDocType, setUploadDocType] = useState('Other');
+  const [uploading, setUploading] = useState(false);
+
   // Filter States
   const [searchDocs, setSearchDocs] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -88,12 +94,12 @@ const DocumentManagement = () => {
     });
   }, []);
 
-  const loadPatientDocs = (p) => {
+  function loadPatientDocs(p) {
     setSelectedPatient(p);
     getPatientDocuments(p.patientId).then(setPatientDocs);
     resetFilters();
     setActiveTab('All');
-  };
+  }
 
   const handleDelete = async (docId) => {
     if (!window.confirm('Are you sure you want to delete this document?')) return;
@@ -105,19 +111,46 @@ const DocumentManagement = () => {
     }
   };
 
+  const handleUploadSubmit = async (e) => {
+    e.preventDefault();
+    if (!uploadFile || !selectedPatient) {
+      alert('Please select a file and a patient.');
+      return;
+    }
+    
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', uploadFile);
+      formData.append('patientId', selectedPatient.patientId);
+      formData.append('documentType', uploadDocType);
+      formData.append('uploadedBy', 'Receptionist');
+
+      const newDoc = await uploadDocument(formData);
+      setPatientDocs(prev => [newDoc, ...prev]);
+      setIsUploadModalOpen(false);
+      setUploadFile(null);
+      alert('Document uploaded successfully!');
+    } catch (err) {
+      alert('Failed to upload document: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const filteredPatients = patients.filter(p => 
     p.name?.toLowerCase().includes(patientSearch.toLowerCase()) || 
     p.contactNumber?.includes(patientSearch)
   );
 
-  const resetFilters = () => {
+  function resetFilters() {
     setSearchDocs('');
     setSelectedCategory('all');
     setSelectedUploadedBy('all');
     setSelectedDoctor('all');
     setStartDate('');
     setEndDate('');
-  };
+  }
 
   // Extract unique filter options
   const uploadedByOptions = useMemo(() => {
@@ -449,8 +482,15 @@ const DocumentManagement = () => {
                     </p>
                   </div>
                 </div>
-                <div style={{ background: T.blueLight, color: '#1d4ed8', border: `1px solid ${T.blueBorder}`, fontSize: '12px', fontWeight: 500, padding: '4px 12px', borderRadius: '6px' }}>
-                  {processedDocs.length} Record{processedDocs.length !== 1 && 's'}
+                <div className="flex items-center gap-3">
+                  <div style={{ background: T.blueLight, color: '#1d4ed8', border: `1px solid ${T.blueBorder}`, fontSize: '12px', fontWeight: 500, padding: '4px 12px', borderRadius: '6px' }}>
+                    {processedDocs.length} Record{processedDocs.length !== 1 && 's'}
+                  </div>
+                  <button 
+                    onClick={() => setIsUploadModalOpen(true)}
+                    style={{ background: T.bluePrimary, color: '#fff', fontSize: '12px', fontWeight: 500, padding: '6px 14px', borderRadius: '6px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <MdAdd size={14} /> Upload Document
+                  </button>
                 </div>
               </div>
 
@@ -563,6 +603,55 @@ const DocumentManagement = () => {
           </div>
         )}
       </div>
+
+      {/* UPLOAD MODAL */}
+      {isUploadModalOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in" onClick={() => setIsUploadModalOpen(false)}>
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-up" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+              <h3 className="font-bold text-gray-800 text-sm">Upload Document for {selectedPatient?.name}</h3>
+              <button className="text-gray-400 hover:text-gray-600 transition-colors" onClick={() => setIsUploadModalOpen(false)}>
+                <MdClose size={18} />
+              </button>
+            </div>
+            <form onSubmit={handleUploadSubmit} className="p-6 space-y-4">
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">Document Type *</label>
+                <select 
+                  className="w-full border border-gray-200 rounded-xl py-2.5 px-3 outline-none text-sm bg-gray-50 focus:bg-white focus:border-blue-500 transition-all appearance-none cursor-pointer"
+                  value={uploadDocType} onChange={(e) => setUploadDocType(e.target.value)} required
+                >
+                  <option value="BloodTest">Blood Report</option>
+                  <option value="XRay">Radiology (X-Ray, Scan)</option>
+                  <option value="PrescriptionScan">Prescription Scan</option>
+                  <option value="Other">Lab Report / Other</option>
+                  <option value="Discharge">Discharge Summary</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">Select File *</label>
+                <input 
+                  type="file" 
+                  onChange={(e) => setUploadFile(e.target.files[0])} 
+                  required
+                  className="w-full border border-gray-200 rounded-xl py-2 px-3 text-sm"
+                  accept="image/*,.pdf"
+                />
+                <p className="text-[10px] text-gray-400 mt-1">Accepts PDF, JPG, PNG. Max 10MB.</p>
+              </div>
+              <div className="flex gap-3 justify-end pt-4 mt-2">
+                <button type="button" className="px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+                  onClick={() => setIsUploadModalOpen(false)}>
+                  Cancel
+                </button>
+                <button type="submit" disabled={uploading} className="px-4 py-2 rounded-xl text-sm font-bold text-white transition-colors flex items-center gap-2" style={{ background: uploading ? '#9ca3af' : '#2563eb' }}>
+                  {uploading ? 'Uploading...' : 'Upload Document'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

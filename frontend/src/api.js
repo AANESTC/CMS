@@ -63,6 +63,12 @@ export const updatePatient = async (id, patientData) => {
   return res.json();
 };
 
+export const deletePatient = async (id) => {
+  const res = await fetch(`${BASE_URL}/patient/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete patient');
+  return res.json();
+};
+
 // ─── APPOINTMENTS ────────────────────────────────────────────
 export const getAppointments = async ({ date, patientId, doctorId } = {}) => {
   const params = new URLSearchParams();

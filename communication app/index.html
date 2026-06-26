@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="mockGD.html">Mock GD</a></li>
+                <li><a href="mockINTERVIEW.html">Mock Interview</a></li>
+                <li><a href="mockSELFINTRODUCTION.html">Mock Self Introduction</a></li>
+                <li><a href="results.html">Result</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="hero">
+        <h1>Welcome to Communication Skill Assessment</h1>
+        <p>Practice Makes Perfect</p>
+        <div class="container">
+          <form id="bookingForm" action="#">
+            <label for="faculty">Choose a Faculty</label>
+            <select id="faculty" name="faculty">
+              <option value="Faculty-1">Faculty-1</option>
+              <option value="Faculty-2">Faculty-2</option>
+              <option value="Faculty-3">Faculty-3</option>
+              <option value="Faculty-4">Faculty-4</option>
+            </select>
+            
+            <label for="event">Choose an Event</label>
+            <select id="event" name="event">
+              <option value="Mock GD">Mock GD</option>
+              <option value="Mock INTERVIEW">Mock Interview</option>
+              <option value="Mock SELFINTRODUCTION">Mock Self Introduction</option>
+            </select>
+            
+            <label for="venue">Choose a Venue</label>
+            <select id="venue" name="venue">
+              <option value="venue-1">IT-Conference Hall-1</option>
+              <option value="venue-2">CSE-Conference Hall-1</option>
+              <option value="venue-3">T&P -GD Hall-1</option>
+              <option value="venue-4">T&P -GD Hall-3</option>
+            </select>
+            
+            <label for="time">Choose Date & Time</label>
+            <select id="time" name="time">
+              <option value="Time-1">10/05/2024 & 8:30AM to 9:30AM </option>
+              <option value="Time-2">10/05/2024 & 9:30AM to 10:30AM</option>
+              <option value="Time-3">10/05/2024 & 11:00AM to 12:00PM</option>
+              <option value="Time-4">10/05/2024 & 12:00PM to 1:00PM</option>
+            </select>
+            
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+    </section>
+    <script></script>
+
+    <script>
+        function checkAvailability() {
+            var student1Faculty = document.getElementById("faculty").value;
+            var student1Venue = document.getElementById("venue").value;
+            var student1Time = document.getElementById("time").value;
+
+            var facultySelect = document.getElementById("faculty");
+            var venueSelect = document.getElementById("venue");
+            var timeSelect = document.getElementById("time");
+
+            if (student1Faculty === "Faculty-1" && student1Venue === "venue-1" && student1Time === "Time-1") {
+                // Disable Faculty-1, Venue-1, and Time-1 for next student
+                disableOption(facultySelect, "Faculty-1");
+                disableOption(venueSelect, "venue-1");
+                disableOption(timeSelect, "Time-1");
+            } else {
+                // Enable all options
+                enableAllOptions(facultySelect);
+                enableAllOptions(venueSelect);
+                enableAllOptions(timeSelect);
+            }
+        }
+
+        function disableOption(selectElement, value) {
+            for (var i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].value === value) {
+                    selectElement.options[i].disabled = true;
+                    break;
+                }
+            }
+        }
+
+        function enableAllOptions(selectElement) {
+            for (var i = 0; i < selectElement.options.length; i++) {
+                selectElement.options[i].disabled = false;
+            }
+        }
+
+        // Submit event handler
+        document.getElementById("bookingForm").addEventListener("submit", function(event) {
+            var selectedEvent = document.getElementById("event").value;
+            var destinationPage = "";
+            switch(selectedEvent) {
+                case "Mock GD":
+                    destinationPage = "mockGD.html";
+                    break;
+                case "Mock INTERVIEW":
+                    destinationPage = "mockINTERVIEW.html";
+                    break;
+                case "Mock SELF INTRODUCTION":
+                    destinationPage = "mockSELFINTODUCTION.html";
+                    break;
+                default:
+                    break;
+            }
+            if (destinationPage !== "") {
+                window.location.href = destinationPage; // Navigate to the corresponding page
+                event.preventDefault(); // Prevent default form submission behavior
+            }
+        });
+    </script>
+</body>
+</html>

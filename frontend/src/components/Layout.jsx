@@ -42,7 +42,7 @@ const Layout = () => {
               <MdLocalHospital className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="font-bold text-white text-sm leading-none">CareFlow CMS</p>
+              <p className="font-bold text-white text-sm leading-none">CareFlow PCMS</p>
               <p className="text-xs mt-0.5" style={{ color: '#64748B' }}>Doctor Portal</p>
             </div>
           </div>
