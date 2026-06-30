@@ -29,9 +29,12 @@ import {
   MdDelete
 } from 'react-icons/md';
 
-const getAvatarUrl = (name) => {
-  const seed = encodeURIComponent((name || 'Unknown').trim().toLowerCase());
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+const getInitials = (name) => {
+  if (!name) return '?';
+  const words = name.trim().split(/\s+/).filter(w => w.length > 0);
+  if (words.length === 0) return '?';
+  if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
 };
 
 // Sparkline Component for Stats Cards
@@ -60,7 +63,7 @@ const Sparkline = ({ data, color, fill }) => {
   );
 };
 
-const PatientManagement = () => {
+const Patients = () => {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -397,31 +400,17 @@ const PatientManagement = () => {
             {filteredPatients.length > 0 ? (
               filteredPatients.map(p => (
                 <div key={p.patientId}
-                     className="bg-white rounded-2xl p-5 border border-gray-100 zoho-card relative overflow-hidden flex flex-col group hover:shadow-md transition-shadow cursor-pointer"
+                     className="bg-white rounded-2xl p-5 border border-gray-100 zoho-card relative overflow-hidden flex flex-col group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                      onClick={() => handleViewPatient(p.patientId)}>
                   {/* Decorative blob */}
                   <div className="absolute -right-5 -top-5 w-20 h-20 rounded-full group-hover:scale-150 transition-transform duration-500 z-0"
                        style={{ background: '#EEF4FF' }} />
 
                   <div className="relative z-10 flex items-start justify-between mb-3">
-                    <>
-                      <img 
-                        src={getAvatarUrl(p.name)}
-                        alt={p.name} 
-                        className="w-12 h-12 rounded-xl flex-shrink-0 object-cover shadow-sm"
-                        style={{ border: '2px solid #E5E7EB', background: '#F3F4F6' }}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          if (e.target.nextSibling) {
-                            e.target.nextSibling.style.display = 'flex';
-                          }
-                        }}
-                      />
-                      <div className="w-12 h-12 rounded-xl items-center justify-center text-white font-bold text-lg shadow-lg flex-shrink-0"
-                           style={{ display: 'none', background: `linear-gradient(135deg, #0B5FFF, #2D7FF9)`, boxShadow: `0 6px 16px rgba(11,95,255,0.3)` }}>
-                        {(p.name || '?').charAt(0).toUpperCase()}
-                      </div>
-                    </>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg flex-shrink-0"
+                         style={{ background: `linear-gradient(135deg, #0B5FFF, #2D7FF9)`, boxShadow: `0 6px 16px rgba(11,95,255,0.3)` }}>
+                      {getInitials(p.name)}
+                    </div>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
                           style={{ background: '#F0F4F8', color: '#6B7A99' }}>
                       {p.patientId?.substring(0, 8).toUpperCase()}
@@ -501,36 +490,19 @@ const PatientManagement = () => {
                 return (
                   <div
                     key={patient.patientId}
-                    className={`grid items-center py-3 px-4 hover:bg-slate-50 cursor-pointer`}
+                    className={`grid items-center py-3 px-4 hover:bg-blue-50/50 cursor-pointer border-l-2 border-transparent hover:border-blue-500 transition-all duration-200`}
                     style={tableColWidths}
                     onClick={() => handleViewPatient(patient.patientId)}
                   >
                     <span className="text-slate-400 text-[10px] font-semibold">{patient.patientId.substring(0,6).toUpperCase()}</span>
                     
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <>
-                        <img 
-                          src={getAvatarUrl(patient.name)}
-                          alt={patient.name} 
-                          style={{
-                            width: 32, height: 32, borderRadius: '50%',
-                            objectFit: 'cover', flexShrink: 0,
-                            border: '1px solid #E5E7EB', background: '#F3F4F6'
-                          }} 
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            if (e.target.nextSibling) {
-                              e.target.nextSibling.style.display = 'flex';
-                            }
-                          }}
-                        />
-                        <div 
-                          className="bg-blue-100 text-blue-700 font-bold flex-shrink-0 rounded-full items-center justify-center" 
-                          style={{ display: 'none', width: '32px', height: '32px', fontSize: '12px' }}
-                        >
-                          {(patient.name || '?').charAt(0).toUpperCase()}
-                        </div>
-                      </>
+                      <div 
+                        className="text-white font-bold flex-shrink-0 rounded-full flex items-center justify-center shadow-sm" 
+                        style={{ width: '32px', height: '32px', fontSize: '12px', background: `linear-gradient(135deg, #0B5FFF, #2D7FF9)` }}
+                      >
+                        {getInitials(patient.name)}
+                      </div>
                       <div className="truncate">
                         <div className="font-semibold text-slate-800 text-xs truncate">{patient.name}</div>
                         <div className="text-[10px] text-slate-400 truncate">{patient.email}</div>
@@ -686,4 +658,4 @@ const PatientManagement = () => {
   );
 };
 
-export default PatientManagement;
+export default Patients;

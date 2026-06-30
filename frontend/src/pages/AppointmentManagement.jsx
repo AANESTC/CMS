@@ -20,15 +20,96 @@ const Z = {
   navy:'#1A2B4A', text:'#6B7A99',
 };
 
-const TIME_SLOTS = [
-  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-  '12:00', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'
+const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
+  const hours = String(Math.floor(i / 2)).padStart(2, '0');
+  const minutes = i % 2 === 0 ? '00' : '30';
+  return `${hours}:${minutes}`;
+});
+
+const TIME_PERIODS = [
+  { label: 'Morning', slots: TIME_SLOTS.filter(t => t >= '06:00' && t < '12:00') },
+  { label: 'Afternoon', slots: TIME_SLOTS.filter(t => t >= '12:00' && t < '17:00') },
+  { label: 'Evening', slots: TIME_SLOTS.filter(t => t >= '17:00' && t < '21:00') },
+  { label: 'Night', slots: TIME_SLOTS.filter(t => t >= '21:00' || t < '06:00') }
 ];
 
 const statusColors = {
   Scheduled: 'bg-green-100 text-green-700',
   Cancelled: 'bg-red-100 text-red-700',
   Completed: 'bg-blue-100 text-blue-700',
+};
+
+const CustomPatientSelect = ({ patients, value, onChange }) => {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectedPatient = patients.find(p => p.patientId === value);
+  const filtered = patients.filter(p => 
+    (p.name && p.name.toLowerCase().includes(search.toLowerCase())) || 
+    (p.contactNumber && p.contactNumber.includes(search))
+  );
+
+  return (
+    <div className="relative" ref={wrapperRef}>
+      <div 
+        onClick={() => setOpen(!open)}
+        className="w-full px-4 py-2 border border-gray-300 rounded-xl bg-white flex justify-between items-center cursor-pointer hover:border-blue-400 transition-colors"
+      >
+        <span className={selectedPatient ? "text-gray-800 font-medium" : "text-gray-400"}>
+          {selectedPatient ? `${selectedPatient.name} - ${selectedPatient.contactNumber || 'No Phone'}` : "Select Patient"}
+        </span>
+        <svg className={`w-5 h-5 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+      
+      {open && (
+        <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl max-h-72 flex flex-col overflow-hidden" style={{ top: '100%' }}>
+          <div className="p-2 border-b border-gray-50 bg-gray-50/50">
+            <div className="relative">
+              <MdSearch className="absolute left-3 top-2.5 text-gray-400" />
+              <input 
+                type="text" 
+                autoFocus
+                placeholder="Search patient by name or phone..." 
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              />
+            </div>
+          </div>
+          <div className="overflow-y-auto flex-1 custom-scrollbar p-1">
+            {filtered.length > 0 ? filtered.map(p => (
+              <div 
+                key={p.patientId} 
+                onClick={() => { onChange(p.patientId); setOpen(false); setSearch(''); }}
+                className={`px-3 py-2 cursor-pointer text-sm transition-all rounded-lg mb-1 flex items-center justify-between ${value === p.patientId ? 'bg-blue-50/80 text-blue-700' : 'hover:bg-gray-50 text-gray-700'}`}
+              >
+                <div>
+                  <div className="font-semibold">{p.name}</div>
+                  <div className="text-[10px] text-gray-500 font-medium">{p.contactNumber || 'No phone'}</div>
+                </div>
+                {value === p.patientId && <MdCheckCircle className="text-blue-600 w-5 h-5" />}
+              </div>
+            )) : (
+              <div className="p-6 text-center text-sm text-gray-400 font-medium">No patients found</div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 const AppointmentManagement = ({ isDoctor = false }) => {
@@ -922,11 +1003,11 @@ const AppointmentManagement = ({ isDoctor = false }) => {
             <form onSubmit={handleBook} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Patient *</label>
-                <select required value={bookForm.patientId} onChange={e => setBookForm({ ...bookForm, patientId: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-xl outline-none bg-white focus:ring-2 focus:ring-blue-500">
-                  <option value="">Select Patient</option>
-                  {patients.map(p => <option key={p.patientId} value={p.patientId}>{p.name} - {p.contactNumber}</option>)}
-                </select>
+                <CustomPatientSelect 
+                  patients={patients} 
+                  value={bookForm.patientId} 
+                  onChange={(val) => setBookForm({ ...bookForm, patientId: val })} 
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
@@ -936,12 +1017,22 @@ const AppointmentManagement = ({ isDoctor = false }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Time Slot *</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {TIME_SLOTS.map(t => (
-                    <button key={t} type="button" onClick={() => setBookForm({ ...bookForm, time: t })}
-                      className={`py-2 rounded-lg text-sm font-medium border transition-colors ${bookForm.time === t ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-200 text-gray-600 hover:border-blue-400 hover:text-blue-700'}`}>
-                      {t}
-                    </button>
+                <div className="max-h-56 overflow-y-auto pr-2 space-y-4 rounded-xl border border-gray-100 p-3 bg-gray-50/40">
+                  {TIME_PERIODS.map(period => (
+                    <div key={period.label}>
+                      <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${period.label === 'Morning' ? 'bg-amber-400' : period.label === 'Afternoon' ? 'bg-orange-400' : period.label === 'Evening' ? 'bg-indigo-400' : 'bg-purple-600'}`}></span>
+                        {period.label}
+                      </h4>
+                      <div className="grid grid-cols-4 gap-2">
+                        {period.slots.map(t => (
+                          <button key={t} type="button" onClick={() => setBookForm({ ...bookForm, time: t })}
+                            className={`py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 ${bookForm.time === t ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30 scale-105' : 'bg-white border-gray-200 text-gray-600 hover:border-blue-400 hover:text-blue-700 hover:shadow-sm'}`}>
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -973,12 +1064,22 @@ const AppointmentManagement = ({ isDoctor = false }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">New Time Slot *</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {TIME_SLOTS.map(t => (
-                    <button key={t} type="button" onClick={() => setRescheduleTime(t)}
-                      className={`py-2 rounded-lg text-sm font-medium border transition-colors ${rescheduleTime === t ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-200 text-gray-600 hover:border-blue-400'}`}>
-                      {t}
-                    </button>
+                <div className="max-h-56 overflow-y-auto pr-2 space-y-4 rounded-xl border border-gray-100 p-3 bg-gray-50/40">
+                  {TIME_PERIODS.map(period => (
+                    <div key={period.label}>
+                      <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${period.label === 'Morning' ? 'bg-amber-400' : period.label === 'Afternoon' ? 'bg-orange-400' : period.label === 'Evening' ? 'bg-indigo-400' : 'bg-purple-600'}`}></span>
+                        {period.label}
+                      </h4>
+                      <div className="grid grid-cols-4 gap-2">
+                        {period.slots.map(t => (
+                          <button key={t} type="button" onClick={() => setRescheduleTime(t)}
+                            className={`py-1.5 rounded-lg text-xs font-semibold border transition-all duration-200 ${rescheduleTime === t ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30 scale-105' : 'bg-white border-gray-200 text-gray-600 hover:border-blue-400 hover:text-blue-700 hover:shadow-sm'}`}>
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>

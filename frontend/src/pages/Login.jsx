@@ -47,7 +47,7 @@ const Login = () => {
   };
 
   const features = [
-    { icon: MdMedicalServices, label: 'Patient Management', color: '#0B5FFF' },
+    { icon: MdMedicalServices, label: 'Patients', color: '#0B5FFF' },
     { icon: MdPeople,          label: 'Appointments',       color: '#00AA45' },
     { icon: MdBarChart,        label: 'Analytics & Reports', color: '#F5A623' },
   ];
@@ -61,12 +61,12 @@ const Login = () => {
         style={{ background: 'linear-gradient(145deg, #1A2B4A 0%, #0F1D35 60%, #0B5FFF 100%)' }}
       >
         {/* Decorative circles */}
-        <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full opacity-10"
+        <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full opacity-10 animate-pulse"
              style={{ background: '#0B5FFF' }} />
         <div className="absolute bottom-10 right-10 w-64 h-64 rounded-full opacity-10"
-             style={{ background: '#00AA45' }} />
+             style={{ background: '#00AA45', animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-5"
-             style={{ background: '#F5A623' }} />
+             style={{ background: '#F5A623', animation: 'pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
 
         {/* Logo */}
         <div className="relative z-10">
@@ -95,13 +95,13 @@ const Login = () => {
 
           <div className="space-y-4">
             {features.map(({ icon: Icon, label, color }) => (
-              <div key={label} className="flex items-center gap-4 p-4 rounded-2xl"
+              <div key={label} className="group flex items-center gap-4 p-4 rounded-2xl hover:scale-105 hover:bg-white/10 hover:shadow-lg transition-all duration-300 cursor-default"
                    style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(8px)' }}>
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300"
                      style={{ background: `${color}22` }}>
                   <Icon className="w-5 h-5" style={{ color }} />
                 </div>
-                <span className="text-white font-medium">{label}</span>
+                <span className="text-white font-medium group-hover:text-blue-100 transition-colors">{label}</span>
               </div>
             ))}
           </div>
@@ -116,8 +116,16 @@ const Login = () => {
       </div>
 
       {/* ── Right Panel ────────────────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-md animate-fade-up">
+      <div className="flex-1 flex items-center justify-center p-8 relative overflow-hidden bg-[#EEF2F7]">
+        
+        {/* Right side decorative background pattern and icons */}
+        <div className="absolute inset-0 z-0" style={{ backgroundImage: 'radial-gradient(#CBD5E1 1.5px, transparent 1.5px)', backgroundSize: '32px 32px', opacity: 0.5 }}></div>
+        
+        <MdMedicalServices className="absolute top-16 right-16 w-32 h-32 text-blue-600 opacity-[0.03] -rotate-12 animate-pulse" style={{ animationDuration: '4s' }} />
+        <MdLocalHospital className="absolute bottom-16 left-16 w-48 h-48 text-green-600 opacity-[0.03] rotate-12 animate-pulse" style={{ animationDuration: '5s' }} />
+        <MdPeople className="absolute top-1/2 -right-12 w-28 h-28 text-amber-500 opacity-[0.03] -translate-y-1/2 animate-pulse" style={{ animationDuration: '6s' }} />
+
+        <div className="w-full max-w-md animate-fade-up relative z-10">
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
@@ -129,7 +137,7 @@ const Login = () => {
           </div>
 
           {/* Card */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl" style={{ boxShadow: '0 20px 60px rgba(11,95,255,0.12)' }}>
+          <div className="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-shadow duration-500" style={{ boxShadow: '0 20px 60px rgba(11,95,255,0.12)' }}>
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-1" style={{ color: '#1A2B4A' }}>Welcome back 👋</h2>
               <p className="text-sm" style={{ color: '#6B7A99' }}>Sign in to your portal to continue</p>
@@ -148,17 +156,11 @@ const Login = () => {
                       key={r}
                       type="button"
                       onClick={() => setRole(r)}
-                      className="py-3 rounded-xl text-sm font-semibold transition-all duration-200 border-2"
-                      style={role === r ? {
-                        background: '#EEF4FF',
-                        borderColor: '#0B5FFF',
-                        color: '#0B5FFF',
-                        boxShadow: '0 0 0 3px rgba(11,95,255,0.12)'
-                      } : {
-                        background: '#F8FAFC',
-                        borderColor: '#E2E8F0',
-                        color: '#64748B'
-                      }}
+                      className={`py-3 rounded-xl text-sm font-semibold transition-all duration-300 border-2 hover:-translate-y-1 hover:shadow-md ${
+                        role === r 
+                          ? 'bg-[#EEF4FF] border-[#0B5FFF] text-[#0B5FFF] shadow-[0_4px_12px_rgba(11,95,255,0.2)]'
+                          : 'bg-[#F8FAFC] border-[#E2E8F0] text-[#64748B] hover:bg-[#EEF2F7] hover:border-[#CBD5E1]'
+                      }`}
                     >
                       {r === 'Doctor' ? '🩺' : '🏥'} {r}
                     </button>
@@ -175,10 +177,7 @@ const Login = () => {
                   placeholder="you@careflow.com"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 outline-none text-sm transition-all"
-                  style={{ borderColor: '#E2E8F0', color: '#1A2B4A', background: '#F8FAFC' }}
-                  onFocus={e => e.target.style.borderColor = '#0B5FFF'}
-                  onBlur={e => e.target.style.borderColor = '#E2E8F0'}
+                  className="w-full px-4 py-3 rounded-xl border-2 outline-none text-sm transition-all duration-300 hover:shadow-md focus:-translate-y-0.5 focus:shadow-lg cursor-pointer focus:cursor-text bg-[#F8FAFC] border-[#E2E8F0] text-[#1A2B4A] hover:bg-[#EEF2F7] focus:bg-white focus:border-[#0B5FFF]"
                 />
               </div>
 
@@ -192,10 +191,7 @@ const Login = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 outline-none text-sm transition-all"
-                  style={{ borderColor: '#E2E8F0', color: '#1A2B4A', background: '#F8FAFC' }}
-                  onFocus={e => e.target.style.borderColor = '#0B5FFF'}
-                  onBlur={e => e.target.style.borderColor = '#E2E8F0'}
+                  className="w-full px-4 py-3 rounded-xl border-2 outline-none text-sm transition-all duration-300 hover:shadow-md focus:-translate-y-0.5 focus:shadow-lg cursor-pointer focus:cursor-text bg-[#F8FAFC] border-[#E2E8F0] text-[#1A2B4A] hover:bg-[#EEF2F7] focus:bg-white focus:border-[#0B5FFF]"
                 />
               </div>
 
@@ -208,11 +204,14 @@ const Login = () => {
 
               {/* Remember + Forgot */}
               <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-2 cursor-pointer p-1.5 -ml-1.5 rounded-lg hover:bg-[#EEF2F7] transition-colors duration-200">
                   <input type="checkbox" className="w-4 h-4 rounded accent-blue-600" />
-                  <span className="text-sm" style={{ color: '#6B7A99' }}>Remember me</span>
+                  <span className="text-sm text-[#6B7A99]">Remember me</span>
                 </label>
-                <a href="#" className="text-sm font-semibold" style={{ color: '#0B5FFF' }}>
+                <a 
+                  href="#" 
+                  className="text-sm font-semibold p-1.5 -mr-1.5 rounded-lg text-[#0B5FFF] hover:bg-[#EEF2F7] hover:underline transition-all duration-200" 
+                >
                   Forgot password?
                 </a>
               </div>
@@ -221,8 +220,10 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="zoho-btn-primary w-full py-3.5 rounded-xl text-white font-semibold flex items-center justify-center gap-2 text-sm"
+                className="zoho-btn-primary w-full py-3.5 rounded-xl text-white font-semibold flex items-center justify-center gap-2 text-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(11,95,255,0.3)] active:translate-y-0 active:shadow-md relative overflow-hidden group"
               >
+                {/* Glow effect on hover */}
+                <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 {loading ? (
                   <>
                     <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

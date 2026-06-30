@@ -9,7 +9,7 @@ import QrSelfService from './pages/QrSelfService';
 import Layout from './components/Layout';
 import ReceptionistLayout from './components/ReceptionistLayout';
 import ReceptionistDashboard from './pages/ReceptionistDashboard';
-import PatientManagement from './pages/PatientManagement';
+import Patients from './pages/Patients';
 import Doctors from './pages/Doctors';
 import AppointmentManagement from './pages/AppointmentManagement';
 import DocumentManagement from './pages/DocumentManagement';
@@ -43,7 +43,7 @@ function App() {
         <Route path="/receptionist" element={<ReceptionistLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ReceptionistDashboard />} />
-          <Route path="patients" element={<PatientManagement />} />
+          <Route path="patients" element={<Patients />} />
           <Route path="patients/:patientId" element={<PatientProfile />} />
           <Route path="doctors" element={<Doctors />} />
           <Route path="appointments" element={<AppointmentManagement />} />

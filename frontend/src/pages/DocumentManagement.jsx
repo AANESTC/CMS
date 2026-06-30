@@ -32,11 +32,14 @@ const T = {
   skyLight:      '#f0f9ff'
 };
 
-
-
-const getAvatarUrl = (name) => {
-  const seed = encodeURIComponent((name || 'Unknown').trim().toLowerCase());
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+const getInitials = (name) => {
+  if (!name) return '?';
+  const words = name.trim().split(/\s+/).filter(w => w.length > 0);
+  if (words.length === 0) return '?';
+  if (words.length === 1) {
+    return words[0].substring(0, 2).toUpperCase();
+  }
+  return words.slice(0, 2).map(w => w[0]).join('').toUpperCase();
 };
 
 const BACKEND_TO_FRONTEND_MAP = {
@@ -369,33 +372,14 @@ const DocumentManagement = () => {
                 onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = '#F9FAFB'; }}
                 onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
               >
-                <img 
-                  src={getAvatarUrl(name)}
-                  alt={name} 
-                  style={{
-                    width: 36, height: 36, borderRadius: '50%',
-                    objectFit: 'cover', flexShrink: 0,
-                    border: '2px solid #E5E7EB', background: '#F3F4F6'
-                  }} 
-                  onError={(e) => {
-                    // Fallback handled nicely
-                    e.target.style.display = 'none';
-                    if (e.target.nextSibling && e.target.nextSibling.dataset.fallback) {
-                      e.target.nextSibling.style.display = 'flex';
-                    }
-                  }}
-                />
-                {/* Fallback initial (hidden by default) */}
                 <div 
-                  data-fallback="true"
                   style={{
-                    display: 'none', width: 36, height: 36, borderRadius: '50%',
-                    background: '#F3F4F6', color: '#9CA3AF',
-                    alignItems: 'center', justifyContent: 'center',
-                    fontSize: 14, fontWeight: 600, flexShrink: 0,
-                    border: '2px solid #E5E7EB'
+                    width: 36, height: 36, borderRadius: '8px',
+                    background: '#2563EB', color: 'white',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 14, fontWeight: 600, flexShrink: 0
                   }}>
-                  {name.charAt(0).toUpperCase()}
+                  {getInitials(name)}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ 
